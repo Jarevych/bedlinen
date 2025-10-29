@@ -1,7 +1,7 @@
 import express from "express";
 import { getFabrics, addFabric, updateFabric, deleteFabric } from "../controllers/fabricController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import express from "express";
+// import express from "express";
 import Fabric from "../models/Fabric.js";
 
 const router = express.Router();

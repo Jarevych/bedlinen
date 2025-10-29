@@ -3,6 +3,7 @@ import './App.css';
 import Fabrics from "./pages/Fabrics";
 import OrderForm from "./pages/OrderForm";
 import axios from 'axios';
+import UploadFabric from './pages/upload';
 // import Login from "./pages/Login";
 
 function App() {
@@ -18,8 +19,9 @@ function App() {
     axios.get('http://localhost:5000/api/fabrics')
     .then(res => setImages(res.data))
     .catch(err => console.error('Помилка завантаження', err));
+    
   }, []);
-
+  console.log(images);
    useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -85,6 +87,7 @@ function App() {
         </div>
          <OrderForm cart={cart} />
         <Fabrics fabrics={images} onAddToCart={addToCart} />
+        <UploadFabric />
       </main>
     </div>
   );
