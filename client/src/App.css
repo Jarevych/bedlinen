@@ -190,7 +190,7 @@ z-index: 5;
 
 .gallery {
   position: absolute;
-  top: 80%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -283,7 +283,16 @@ z-index: 5;
 
   .hero {
     width: 1440px;
-    height: 800px;
+    /* height: 800px; */
+  }
+  .slider {
+    width: 100%;
+    height: 500px;
+  }
+  .gallery {
+    gap: 2rem;
+    position: absolute;
+    top: 100%;
   }
   .fabrics-grid {
     display: flex;

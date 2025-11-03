@@ -56,8 +56,8 @@ function Home() {
       </header>
 
       <main>
-
-        <div className="slider">
+            <div className='hero'>
+                <div className="slider">
               {fabrics.map((fabric, idx) => (
                 <img
                   key={fabric._id}
@@ -79,7 +79,7 @@ function Home() {
                 />
               ))}
             </div>
-          
+          </div>
 
         {/* ✅ передаємо addToCart з контексту */}
         <Fabrics fabrics={fabrics} onAddToCart={addToCart} />
