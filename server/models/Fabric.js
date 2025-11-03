@@ -5,6 +5,8 @@ const fabricSchema = new mongoose.Schema({
   image: { type: String }, // зберігаємо відносний URL, наприклад "/uploads/12345.jpg"
   pricePerMeter: { type: Number },
   inStock: { type: Boolean, default: true },
+  fabric: { type: String, enum: ["Бязь", "Сатин", "Байка"], default: "Бязь" },
+  availability: { type: String, enum: ["В наявності", "Немає в наявності"], default: "В наявності" },
   createdAt: { type: Date, default: Date.now },
 });
 

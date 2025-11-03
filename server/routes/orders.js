@@ -1,9 +1,36 @@
 import express from "express";
-import { createOrder, getOrders } from "../controllers/orderController.js";
+import Order from "../models/Order.js";
 
 const router = express.Router();
 
-router.get("/", getOrders);
-router.post("/", createOrder);
+// Створити нове замовлення
+router.post("/", async (req, res) => {
+  try {
+    const { name, phone, size, fabricId } = req.body;
+
+    if (!name || !phone || !size || !fabricId) {
+      return res.status(400).json({ message: "Всі поля обов'язкові" });
+    }
+
+    const newOrder = new Order({
+      name,
+      phone,
+      size,
+      fabric: fabricId,
+    });
+
+    await newOrder.save();
+    res.status(201).json({ message: "Замовлення успішно створено" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// (опціонально) Отримати всі замовлення
+router.get("/", async (req, res) => {
+  const orders = await Order.find().populate("fabric");
+  res.json(orders);
+});
 
 export default router;

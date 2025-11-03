@@ -40,10 +40,21 @@ export default function UploadFabric({ onCreated }) {
     <form onSubmit={handleSubmit}>
       <input type="text" placeholder="Name" value={name} onChange={(e)=>setName(e.target.value)} required />
       <input type="number" placeholder="Price per meter" value={price} onChange={(e)=>setPrice(e.target.value)} />
+      <select name="fabric" id="">
+        <option value="">Бязь</option>
+        <option value="">Сатин</option>
+        <option value="">Байка</option>
+
+      </select>
+      <select name="" id="">
+        <option value="">В наявності</option>
+        <option value="">Немає в наявності</option>
+      </select>
+
       <input type="file" accept="image/*" onChange={handleFile} />
       <button type="submit">Upload & Create</button>
     </form>
   );
 }
 
-// export default UploadFabric;
+//  export default UploadFabric;

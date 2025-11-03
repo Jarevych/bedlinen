@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-  fabric: { type: mongoose.Schema.Types.ObjectId, ref: "Fabric", required: true },
-  width: Number,
-  length: Number,
-  height: Number,
-  customerName: String,
-  contact: String,
+  name: { type: String, required: true },
+  phone: { type: String, required: true },
+  size: { type: String, required: true },
+  fabric: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Fabric",
+    required: true
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
