@@ -5,10 +5,10 @@ import OrderForm from "./pages/OrderForm";
 import axios from 'axios';
 import UploadFabric from './pages/upload';
 // import Login from "./pages/Login";
-
+const API_BASE = "http://localhost:5000";
 function App() {
   //  const [user, setUser] = useState(null);
-  const [images, setImages] = useState([]);
+  const [fabrics, setFabrics] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
@@ -16,19 +16,26 @@ function App() {
 
   // Зміна картинки кожні 3 секунди
   useEffect(() => {
-    axios.get('http://localhost:5000/api/fabrics')
-    .then(res => setImages(res.data))
+    axios.get(`${API_BASE}/api/fabrics`)
+    .then(res => setFabrics(res.data))
     .catch(err => console.error('Помилка завантаження', err));
     
   }, []);
-  console.log(images);
-   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
 
-    return () => clearInterval(interval);
-  }, [images.length]);
+  // console.log(images);
+
+   useEffect(() => {
+    if (fabrics.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentIndex(prev => (prev + 1) % fabrics.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [fabrics]);
+
+  if (fabrics.length === 0) {
+    return <div className="loading">Завантаження зображень...</div>;
+  }
 
 
 
@@ -63,22 +70,22 @@ function App() {
           <h2>Виберіть свій улюблений дизайн постільної білизни</h2>
 
           <div className="slider">
-            {images.map((item, idx) => (
+            {fabrics.map((fabric, idx) => (
               <img
-                key={item.id || idx}
-                src={item.image}
-                alt={item.name}
+                key={fabric._id}
+                src={`${API_BASE}${fabric.image}`}
+                alt={fabric.name}
                 className={`slide ${currentIndex === idx ? 'active' : ''}`}
               />
             ))}
           </div>
 
-          <div className="gallery">
-            {images.map((item, idx) => (
+           <div className="gallery">
+            {fabrics.map((fabric, idx) => (
               <img
-                key={item.id || idx}
-                src={item.image}
-                alt={item.name}
+                key={fabric._id}
+                src={`${API_BASE}${fabric.image}`}
+                alt={fabric.name}
                 className={`thumbnail ${currentIndex === idx ? 'active' : ''}`}
                 onClick={() => setCurrentIndex(idx)}
               />
@@ -86,7 +93,7 @@ function App() {
           </div>
         </div>
          <OrderForm cart={cart} />
-        <Fabrics fabrics={images} onAddToCart={addToCart} />
+        <Fabrics fabrics={fabrics} onAddToCart={addToCart} />
         <UploadFabric />
       </main>
     </div>

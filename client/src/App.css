@@ -116,6 +116,26 @@ z-index: 5;
   gap: 1rem;
   margin-top: 1.5rem;
 }
+.fabrics {
+  /* position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+   overflow: hidden;
+}
+
+.fabric-card {
+   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* opacity: 0; */
+  transition: opacity 1s ease-in-out;
+}
 
 .thumbnail {
   width: 100px;
