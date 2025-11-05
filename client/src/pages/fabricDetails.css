@@ -1,0 +1,55 @@
+.fabric-details {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fabric-info {
+  display: flex;
+  gap: 2rem;
+  max-width: 900px;
+  margin-top: 1rem;
+}
+
+.fabric-details-img {
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fabric-text {
+  flex: 1;
+}
+
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-add, .btn-order {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-add {
+  background-color: #ffd700;
+}
+
+.btn-order {
+  background-color: #ff6600;
+  color: white;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}

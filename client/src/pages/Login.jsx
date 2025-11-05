@@ -1,43 +1,46 @@
-import { useState } from "react";
-import api from "../api";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
 
-function Login({ onLogin }) {
-  const [username, setUsername] = useState("");
+const Login = () => {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/login", { username, password });
-      localStorage.setItem("token", res.data.token);
-      onLogin(res.data); // передаємо дані користувача в App
+      await login(identifier, password);
+      navigate("/profile");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      alert(err.response?.data?.message || "Помилка входу");
     }
   };
 
   return (
-    <div className="login">
-      <h2>Admin Login</h2>
-      <form onSubmit={handleLogin}>
+    <div className="auth-form">
+      <h2>Вхід</h2>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Email або телефон"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <button type="submit">Login</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <button type="submit">Увійти</button>
       </form>
     </div>
   );
-}
+};
 
 export default Login;

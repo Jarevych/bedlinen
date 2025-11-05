@@ -1,6 +1,6 @@
 import express from "express";
 import { getFabrics, addFabric, updateFabric, deleteFabric } from "../controllers/fabricController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { authMiddleware, isAdmin } from "../middleware/authMiddleware.js";
 // import express from "express";
 import Fabric from "../models/Fabric.js";
 
@@ -15,16 +15,25 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", /* protect, */ async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const { name, pricePerMeter, image } = req.body;
-    if (!name) return res.status(400).json({ message: "Name is required" });
+    const { id } = req.params;
+    const fabric = await Fabric.findById(id);
+    if (!fabric) return res.status(404).json({ message: "Fabric not found" });
+    res.json(fabric);
+  } catch (err) {
+    console.error("GET /api/fabrics/:id error:", err);
+    res.status(400).json({ message: "Invalid id or server error" });
+  }
+});
 
-    const fabric = new Fabric({ name, pricePerMeter, image });
+router.post("/", authMiddleware, isAdmin, async (req, res) => {
+  try {
+    const fabric = new Fabric(req.body);
     await fabric.save();
     res.status(201).json(fabric);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Помилка при додаванні тканини" });
   }
 });
 
@@ -47,8 +56,9 @@ router.delete("/:id", /* protect, */ async (req, res) => {
 });
 
 router.get("/", getFabrics);
-router.post("/", protect, addFabric);
-router.put("/:id", protect, updateFabric);
-router.delete("/:id", protect, deleteFabric);
+router.get('/:id');
+router.post("/", addFabric);
+router.put("/:id", updateFabric);
+router.delete("/:id", deleteFabric);
 
 export default router;

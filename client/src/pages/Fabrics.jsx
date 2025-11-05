@@ -1,12 +1,85 @@
-import React, { useState } from "react";
-import OrderPopup from "../components/OrderPopup";
+// import React, { useState } from "react";
+// import OrderPopup from "../components/OrderPopup";
 
+// const API_BASE = "http://localhost:5000";
+
+// function Fabrics({ fabrics, onSelectFabric  }) {
+//   // const [selectedFabric, setSelectedFabric] = useState(null);
+//   const [showPopup, setShowPopup] = useState(false);
+
+//   if (!fabrics || fabrics.length === 0)
+//     return <p>Поки що немає доступних тканин.</p>;
+
+//   return (
+//     <section className="fabrics">
+//       <h2>Наші тканини</h2>
+//       <div className="fabrics-grid">
+//         {fabrics.map((fabric) => (
+//           <div className="fabric-card" key={fabric._id}>
+//             <img
+//               src={`${API_BASE}${fabric.image}`}
+//               alt={fabric.name}
+//               className="fabric-img"
+//             />
+//             <h3>{fabric.name}</h3>
+//             {fabric.description && <p>{fabric.description}</p>}
+//             <p>від&nbsp;{fabric.pricePerMeter}&nbsp;грн</p>
+//             <p>Тканина - {fabric.fabric}</p>
+//            <p>
+//   {fabric.inStock ? 'В наявності' : 'Немає в наявності'}
+// </p>
+
+//             <div className="actions">
+//               <button
+//               className="btn-add"
+//                 onClick={() => {
+//                   // setSelectedFabric(fabric);
+//                   setShowPopup(true);
+//                 }}
+//               >
+//                 Замовити
+//               </button>
+  
+//               <button onClick={() => onSelectFabric(fabric)} className="btn-add">
+//                 🛒 Додати в кошик
+//               </button>
+//             </div>
+//             <div
+//           key={fabric._id}
+//           className="fabric-card"
+//           onClick={() => onSelectFabric(fabric)}
+//         >
+//           <img
+//             src={`${API_BASE}${fabric.image}`}
+//             alt={fabric.name}
+//             className="fabric-img"
+//           />
+//           <h3>{fabric.name}</h3>
+//           <p>{fabric.shortDescription || "Натисніть, щоб дізнатися більше"}</p>
+//         </div>
+//           </div>
+//         ))}
+//       </div>
+
+//       {showPopup && (
+//         <OrderPopup
+//           fabric={selectedFabric}
+//           onClose={() => setShowPopup(false)}
+//           onAddToCart={(item) => {
+//             onSelectFabric(item);
+//             setShowPopup(false);
+//           }}
+//         />
+//       )}
+//     </section>
+//   );
+// }
+
+// export default Fabrics;
+import React from "react";
 const API_BASE = "http://localhost:5000";
 
-function Fabrics({ fabrics, onAddToCart }) {
-  const [selectedFabric, setSelectedFabric] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
-
+function Fabrics({ fabrics, onSelectFabric }) {
   if (!fabrics || fabrics.length === 0)
     return <p>Поки що немає доступних тканин.</p>;
 
@@ -15,7 +88,11 @@ function Fabrics({ fabrics, onAddToCart }) {
       <h2>Наші тканини</h2>
       <div className="fabrics-grid">
         {fabrics.map((fabric) => (
-          <div className="fabric-card" key={fabric._id}>
+          <div
+            className="fabric-card"
+            key={fabric._id}
+            onClick={() => onSelectFabric(fabric)} // 👉 відкриває сторінку з деталями
+          >
             <img
               src={`${API_BASE}${fabric.image}`}
               alt={fabric.name}
@@ -25,39 +102,10 @@ function Fabrics({ fabrics, onAddToCart }) {
             {fabric.description && <p>{fabric.description}</p>}
             <p>від&nbsp;{fabric.pricePerMeter}&nbsp;грн</p>
             <p>Тканина - {fabric.fabric}</p>
-           <p>
-  {fabric.inStock ? 'В наявності' : 'Немає в наявності'}
-</p>
-
-            <div className="actions">
-              <button
-              className="btn-add"
-                onClick={() => {
-                  setSelectedFabric(fabric);
-                  setShowPopup(true);
-                }}
-              >
-                Замовити
-              </button>
-  
-              <button onClick={() => onAddToCart(fabric)} className="btn-add">
-                🛒 Додати в кошик
-              </button>
-            </div>
+            <p>{fabric.inStock ? "В наявності" : "Немає в наявності"}</p>
           </div>
         ))}
       </div>
-
-      {showPopup && (
-        <OrderPopup
-          fabric={selectedFabric}
-          onClose={() => setShowPopup(false)}
-          onAddToCart={(item) => {
-            onAddToCart(item);
-            setShowPopup(false);
-          }}
-        />
-      )}
     </section>
   );
 }

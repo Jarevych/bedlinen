@@ -9,9 +9,9 @@ const API_BASE = "http://localhost:5000";
 function Home() {
   const [fabrics, setFabrics] = useState([]);
   const [user, setUser] = useState(null);
-  const { cart, addToCart } = useContext(CartContext); // ✅ беремо з контексту
+  const { cart } = useContext(CartContext); // ✅ беремо з контексту
   const navigate = useNavigate();
-   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     axios
@@ -29,10 +29,11 @@ function Home() {
     }
   }, [fabrics]);
 
+  const logout = () => setUser(null);
+
   if (fabrics.length === 0) {
     return <div className="loading">Завантаження зображень...</div>;
   }
-  const logout = () => setUser(null);
 
   return (
     <div className="app">
@@ -56,33 +57,36 @@ function Home() {
       </header>
 
       <main>
-            <div className='hero'>
-                <div className="slider">
-              {fabrics.map((fabric, idx) => (
-                <img
-                  key={fabric._id}
-                  src={`${API_BASE}${fabric.image}`}
-                  alt={fabric.name}
-                  className={`slide ${currentIndex === idx ? "active" : ""}`}
-                />
-              ))}
-            </div>
-
-            <div className="gallery">
-              {fabrics.map((fabric, idx) => (
-                <img
-                  key={fabric._id}
-                  src={`${API_BASE}${fabric.image}`}
-                  alt={fabric.name}
-                  className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
-                  onClick={() => setCurrentIndex(idx)}
-                />
-              ))}
-            </div>
+        <div className="hero">
+          <div className="slider">
+            {fabrics.map((fabric, idx) => (
+              <img
+                key={fabric._id}
+                src={`${API_BASE}${fabric.image}`}
+                alt={fabric.name}
+                className={`slide ${currentIndex === idx ? "active" : ""}`}
+              />
+            ))}
           </div>
 
+          <div className="gallery">
+            {fabrics.map((fabric, idx) => (
+              <img
+                key={fabric._id}
+                src={`${API_BASE}${fabric.image}`}
+                alt={fabric.name}
+                className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
+                onClick={() => setCurrentIndex(idx)}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* ✅ передаємо addToCart з контексту */}
-        <Fabrics fabrics={fabrics} onAddToCart={addToCart} />
+        <Fabrics
+          fabrics={fabrics}
+          onSelectFabric={(fabric) => navigate(`/fabric/${fabric._id}`)}
+        />
       </main>
     </div>
   );

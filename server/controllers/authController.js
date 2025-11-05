@@ -4,12 +4,12 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { username, password, isAdmin } = req.body;
-    const existing = await User.findOne({ username });
+    const { name, password, isAdmin } = req.body;
+    const existing = await User.findOne({ name });
     if (existing) return res.status(400).json({ message: "User already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashed, isAdmin });
+    const user = new User({ name, password: hashed, isAdmin });
     await user.save();
 
     res.status(201).json({ message: "User created" });
@@ -20,8 +20,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const { name, password } = req.body;
+    const user = await User.findOne({ name });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const match = await bcrypt.compare(password, user.password);
@@ -31,7 +31,7 @@ export const login = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.json({ token, username, isAdmin: user.isAdmin });
+    res.json({ token, name, isAdmin: user.isAdmin });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

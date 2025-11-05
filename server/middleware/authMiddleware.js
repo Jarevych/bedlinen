@@ -1,31 +1,30 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
 
-export const protect = async (req, res, next) => {
-  let token;
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      // Отримуємо токен
-      token = req.headers.authorization.split(" ")[1];
+// ✅ Перевіряє токен
+export const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-      // Розшифровуємо токен
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Знаходимо користувача, але без пароля
-      req.user = await User.findById(decoded.id).select("-password");
-
-      next();
-    } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: "Not authorized, token failed" });
-    }
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Немає токена доступу" });
   }
 
-  if (!token) {
-    res.status(401).json({ message: "Not authorized, no token" });
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // { id, role }
+    next();
+  } catch (err) {
+    return res.status(403).json({ message: "Недійсний токен" });
   }
+};
+
+// ✅ Додатково — перевірка адміністратора
+export const isAdmin = (req, res, next) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ message: "Доступ заборонено (тільки для адміністратора)" });
+  }
+  next();
 };
