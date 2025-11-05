@@ -56,11 +56,15 @@ app.post("/api/fabrics/upload", upload.single("image"), (req, res) => {
 // Routes
 import fabricRoutes from "./routes/fabrics.js";
 import orderRoutes from "./routes/orders.js";
+import userRoutes from "./routes/userRoutes.js"
 import authRoutes from "./routes/auth.js";
 
 app.use("/api/fabrics", fabricRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+
+app.get("/", (req, res) => res.send("API працює ✅"));
 
 // MongoDB
 mongoose

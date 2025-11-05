@@ -9,7 +9,10 @@ import Cart from "./pages/Cart";
 import FabricDetails from "./pages/FabricDetails";
 import Register from "./pages/Register";
 import { AuthContext } from "./context/AuthContext.jsx";
-
+import ProfileDashboard from "./pages/Profile/ProfileDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+// import AdminDashboard from "./pages/AdminDashboard";
 
 const API_BASE = "http://localhost:5000";
 function App() {
@@ -25,7 +28,7 @@ function App() {
       <nav className="navbar">
         <Link to="/" className="nav-logo">🛏️ Bedlinen</Link>
         <div className="nav-links">
-          {isAdmin && <Link to="/add-fabric" className="btn-add">➕ Додати постіль</Link>}
+          {isAdmin && <Link to="/admin" className="btn-add">Адмін панель</Link>}
 
           {user ? (
             <>
@@ -46,8 +49,19 @@ function App() {
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {isAdmin && <Route path="/add-fabric" element={<UploadFabric />} />}
+        {isAdmin && <Route path="/add-fabric" element={
+          <ProtectedRoute adminOnly>
+          <UploadFabric />
+        </ProtectedRoute>} />}
         <Route path="/fabric/:id" element={<FabricDetails />} /> {/* ← нова сторінка */}
+        <Route path="/profile" element={
+           <ProtectedRoute>
+        <ProfileDashboard />
+      </ProtectedRoute>
+          } />
+        <Route path="/admin" element={
+          <ProtectedRoute><AdminDashboard />
+          </ProtectedRoute>} />
       </Routes>
     </Router>
   );
