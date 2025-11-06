@@ -1,0 +1,90 @@
+.add-fabric {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", system-ui, sans-serif;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.add-fabric:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.add-fabric h3 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.add-fabric form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-fabric input,
+.add-fabric textarea,
+.add-fabric select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fafafa;
+}
+
+.add-fabric input:focus,
+.add-fabric textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  background-color: #fff;
+}
+
+.add-fabric textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.add-fabric label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.add-fabric input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.add-fabric button {
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #007bff, #00a8ff);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-fabric button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.add-fabric button:active {
+  transform: scale(0.97);
+}

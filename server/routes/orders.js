@@ -6,7 +6,7 @@ const router = express.Router();
 // Створити нове замовлення
 router.post("/", async (req, res) => {
   try {
-    const { name, phone, size, fabricId } = req.body;
+    const { name, phone, size, fabricId, customSize } = req.body;
 
     if (!name || !phone || !size || !fabricId) {
       return res.status(400).json({ message: "Всі поля обов'язкові" });
@@ -16,7 +16,9 @@ router.post("/", async (req, res) => {
       name,
       phone,
       size,
-      fabric: fabricId,
+      customSize: customSize || null,
+      fabric: fabricId, 
+      status: "pending",
     });
 
     await newOrder.save();
@@ -28,9 +30,14 @@ router.post("/", async (req, res) => {
 });
 
 // (опціонально) Отримати всі замовлення
-router.get("/", async (req, res) => {
-  const orders = await Order.find().populate("fabric");
+router.get("/", async (req, res) => { 
+  const orders = await Order.find()
+    // .populate("user", "name email phone") // додає дані користувача
+    .populate("fabric", "name pricePerMeter image") // додає дані про постіль
+    .sort({ createdAt: -1 });
   res.json(orders);
+
 });
+
 
 export default router;

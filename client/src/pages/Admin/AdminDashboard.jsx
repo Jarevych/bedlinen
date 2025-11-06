@@ -3,6 +3,9 @@ import FabricsList from "./FabricsList.jsx";
 import OrdersList from "./OrderList.jsx";
 import AddFabric from "./AddFabric.jsx";
 import UsersList from "./UsersList.jsx";
+import '../styles/AdminDashboard.css'
+import '../styles/admin-table.css'
+
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState("fabrics");
@@ -11,10 +14,18 @@ export default function AdminDashboard() {
     <div className="admin-dashboard">
       <h2>🛠️ Панель адміністратора</h2>
       <nav className="admin-nav">
-        <button onClick={() => setTab("fabrics")}>Постілі</button>
-        <button onClick={() => setTab("orders")}>Замовлення</button>
-        <button onClick={() => setTab("add")}>Додати постіль</button>
-        <button onClick={() => setTab("users")}>Користувачі</button>
+        <button 
+         className={tab === "fabrics" ? "active" : ""}
+         onClick={() => setTab("fabrics")}>Постілі</button>
+        <button 
+         className={tab === "orders" ? "active" : ""}
+        onClick={() => setTab("orders")}>Замовлення</button>
+        <button 
+         className={tab === "add" ? "active" : ""}
+        onClick={() => setTab("add")}>Додати постіль</button>
+        <button 
+        className={tab === "users" ? "active" : ""}
+        onClick={() => setTab("users")}>Користувачі</button>
       </nav>
 
       <div className="admin-content">
@@ -26,25 +37,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
-// import React from "react";
-// import { Link, Outlet } from "react-router-dom";
-
-// export default function AdminDashboard() {
-//   return (
-//     <div className="dashboard">
-//       <aside className="sidebar">
-//         <h2>Адмін-панель</h2>
-//         <nav>
-//           <Link to="/admin">📦 Усі товари</Link>
-//           <Link to="/admin/add-fabric">➕ Додати постіль</Link>
-//           <Link to="/admin/orders">🧾 Замовлення</Link>
-//           <Link to="/admin/users">👤 Користувачі</Link>
-//         </nav>
-//       </aside>
-//       <main className="dashboard-content">
-//         <Outlet /> {/* сюди підвантажуються вкладки */}
-//       </main>
-//     </div>
-//   );
-// }
 

@@ -13,7 +13,11 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(identifier, password);
-      navigate("/profile");
+      if (user?.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/profile");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Помилка входу");
     }

@@ -1,0 +1,124 @@
+.users-list {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.users-list h3 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.users-list table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #ddd;
+}
+
+.users-list th,
+.users-list td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.users-list th {
+  background-color: #f6f8fa;
+  color: #444;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.users-list tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.users-list tr:hover {
+  background-color: #f1f5ff;
+}
+
+.users-list td {
+  font-size: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+/* --- Buttons --- */
+.users-list button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.users-list button:hover {
+  transform: translateY(-1px);
+}
+
+.users-list button:first-child {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.users-list button:first-child:hover {
+  background-color: #006ae1;
+}
+
+.users-list button:last-child {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+.users-list button:last-child:hover {
+  background-color: #e43d3d;
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  .users-list table,
+  .users-list thead,
+  .users-list tbody,
+  .users-list th,
+  .users-list td,
+  .users-list tr {
+    display: block;
+  }
+
+  .users-list tr {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+  }
+
+  .users-list td {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+  }
+
+  .users-list td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #666;
+  }
+
+  .users-list th {
+    display: none;
+  }
+}

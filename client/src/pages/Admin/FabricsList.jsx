@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import '../styles/admin-table.css'
+
 
 const API_BASE = "http://localhost:5000";
 
@@ -16,7 +18,7 @@ export default function FabricsList() {
       })
       .catch((err) => console.error("Помилка при отриманні постелей:", err));
   }, []);
-
+console.log(fabrics)
   const handleDelete = async (id) => {
     if (!window.confirm("Точно видалити цю постіль?")) return;
     try {
@@ -49,9 +51,10 @@ export default function FabricsList() {
             {fabrics.map((fabric) => (
               <tr key={fabric._id}>
                 <td>{fabric.name}</td>
-                <td>{fabric.price} грн</td>
+                <td>{fabric.pricePerMeter} грн</td>
                 <td>{fabric.type}</td>
                 <td>{fabric.inStock ? "✅" : "❌"}</td>
+                <td><img src={`${API_BASE}${fabric.image}`} alt={fabric.name} width="100" /></td>
                 <td>
                   <button onClick={() => alert("Редагування скоро!")} className="btn-small">✏️</button>
                   <button onClick={() => handleDelete(fabric._id)} className="btn-small red">🗑️</button>

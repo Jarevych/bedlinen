@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import '../styles/AddFabric.css'
+import '../styles/admin-table.css'
 
 const API_BASE = "http://localhost:5000";
 
