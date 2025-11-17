@@ -1,209 +1,269 @@
+/* src/pages/styles/FabricDetails.css */
+
+/* Загальні налаштування */
 .fabric-details {
-  padding: 20px;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
 }
 
 .back-btn {
-  margin-bottom: 15px;
-  padding: 5px 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #555;
   cursor: pointer;
+  margin-bottom: 15px;
+  transition: color 0.2s;
+}
+.back-btn:hover {
+  color: #000;
 }
 
-.fabric-info {
+.fabric-top {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
 }
 
-.fabric-gallery {
+.gallery {
   flex: 1;
   min-width: 300px;
 }
 
-.main-image {
+.main-img {
   width: 100%;
   max-width: 500px;
-  cursor: pointer;
+  height: auto;
   border-radius: 10px;
-  object-fit: contain;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+.main-img:hover {
+  transform: scale(1.02);
 }
 
-.thumbnails {
+.thumbs {
   display: flex;
   gap: 10px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
-
-.thumbnail {
-  width: 80px;
-  height: 80px;
+.thumb {
+  width: 60px;
+  height: 60px;
   object-fit: cover;
+  border-radius: 6px;
   cursor: pointer;
-  border: 2px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid transparent;
+  transition: border 0.2s, transform 0.2s;
+}
+.thumb.active {
+  border: 2px solid #0077ff;
+  transform: scale(1.1);
 }
 
-.thumbnail:hover {
-  border-color: #007bff;
-}
-
-.fabric-text {
+.meta {
   flex: 1;
   min-width: 300px;
 }
 
-.size-selector {
+.meta h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.meta .desc {
+  margin-bottom: 15px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.size-row, .elastic-row {
   margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+}
+.size-row label, .elastic-row label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.size-row select, 
+.elastic-row input[type="number"], 
+.custom-block input,
+.comment textarea {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  max-width: 250px;
+  margin-bottom: 10px;
+}
+
+.custom-block {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+.custom-block h4 {
+  margin-bottom: 10px;
+}
+
+.custom-block .part {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.custom-block .part strong {
+  width: 120px;
+  line-height: 32px;
+}
+
+.comment textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 60px;
+  resize: vertical;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .actions {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.btn-add, .btn-quick {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .btn-add {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
+  background-color: #0077ff;
+  color: #fff;
+}
+.btn-add:hover {
+  background-color: #005ec2;
 }
 
-.btn-add:hover { background: #218838; }
-
-.btn-order {
-  background: #ffc107;
-  color: #212529;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
+.btn-quick {
+  background-color: #ff9900;
+  color: #fff;
+}
+.btn-quick:hover {
+  background-color: #cc7a00;
 }
 
-.btn-order:hover { background: #e0a800; }
+/* Таблиці */
+.size-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+.size-table th, .size-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+.size-table th {
+  background-color: #f2f2f2;
+}
 
 /* Lightbox */
 .lightbox-overlay {
   position: fixed;
-  top:0; left:0; width:100%; height:100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.8);
-  display:flex; justify-content:center; align-items:center;
-  z-index:10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
-
-.lightbox-image {
+.lightbox-img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 10px;
 }
-.reset-main-btn {
-  margin-top: 5px;
-  padding: 5px 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
 
-.reset-main-btn:hover {
-  background: #0056b3;
-}
-
-/* Modal швидкого замовлення */
+/* Modal */
 .modal-overlay {
-  position: absolute;
-  top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.7);
-  display:flex; justify-content:center; align-items:center;
-  z-index: 10001;
-  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
-
 .modal {
   background: #fff;
-  padding: 20px;
   border-radius: 10px;
-  width: 100%;
+  padding: 25px;
+  width: 90%;
   max-width: 400px;
-  /* height: 100%; */
+  box-shadow: 0 4px 25px rgba(0,0,0,0.2);
 }
-
-.modal input, .modal select {
-  width: 100%;
-  padding: 7px;
-  margin: 5px 0 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.btn {
-  background: #28a745;
-  color: white;
-  border:none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn:hover { background: #218838; }
-
-.btn-cancel {
-  background: #dc3545;
-  color:white;
-  border:none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor:pointer;
-}
-
-.btn-cancel:hover { background: #c82333; }
-.size-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.modal h3 {
   margin-bottom: 15px;
 }
-
-.size-table th,
-.size-table td {
-  border: 1px solid #ddd;
+.modal input {
+  width: 100%;
   padding: 8px 10px;
-  text-align: center;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
-
-.size-table th {
-  background-color: #f6f6f6;
-  font-weight: bold;
-}
-
-.elastic-sheet {
-  margin: 15px 0;
-}
-
-.elastic-inputs {
+.modal-actions {
   display: flex;
   gap: 10px;
-  margin-top: 5px;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+.modal-actions .btn {
+  background-color: #0077ff;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.modal-actions .btn-cancel {
+  background-color: #ccc;
+  color: #333;
 }
 
-.custom-size-fields {
-  margin-top: 20px;
-}
-
-.custom-part {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+/* Адаптивність */
+@media (max-width: 768px) {
+  .fabric-top {
+    flex-direction: column;
+  }
+  .gallery {
+    width: 100%;
+  }
+  .meta {
+    width: 100%;
+  }
+  .custom-block .part {
+    flex-direction: column;
+  }
 }
