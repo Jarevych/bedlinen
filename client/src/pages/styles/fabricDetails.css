@@ -21,25 +21,26 @@
 .back-btn:hover {
   color: #000;
 }
-
 .fabric-top {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
 }
-
 .gallery {
-  flex: 1;
-  min-width: 300px;
+  flex: 1 1 400px; /* дозволяємо рости та стискатися, мінімум 400px */
+  max-width: 500px; /* щоб фото не було занадто великим */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 .main-img {
   width: 100%;
-  max-width: 500px;
   height: auto;
+  max-height: 500px; /* обмежує висоту */
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  object-fit: contain; /* важливо: картинка не розтягується */
   transition: transform 0.2s;
 }
 .main-img:hover {
@@ -67,7 +68,7 @@
 }
 
 .meta {
-  flex: 1;
+  flex: 1 1 300px; /* мінімум 300px */
   min-width: 300px;
 }
 
