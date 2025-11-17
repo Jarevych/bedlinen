@@ -9,7 +9,6 @@ import cloudinary from "../config/cloudinary.js";
 
 
 const router = express.Router();
-
 // Налаштування multer для збереження фото
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -19,6 +18,7 @@ const storage = new CloudinaryStorage({
   },
 });
 // ГЕТ всі тканини
+const upload = multer({ storage });
 router.get("/", getFabrics);
 
 // ГЕТ конкретна тканина
