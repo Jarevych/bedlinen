@@ -1,6 +1,3 @@
-/* src/pages/styles/FabricDetails.css */
-
-/* Загальні налаштування */
 .fabric-details {
   max-width: 1200px;
   margin: 0 auto;
@@ -27,8 +24,8 @@
   gap: 30px;
 }
 .gallery {
-  flex: 1 1 400px; /* дозволяємо рости та стискатися, мінімум 400px */
-  max-width: 500px; /* щоб фото не було занадто великим */
+  flex: 1 1 400px; 
+  max-width: 500px; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,11 +33,11 @@
 .main-img {
   width: 100%;
   height: auto;
-  max-height: 500px; /* обмежує висоту */
+  max-height: 500px; 
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  object-fit: contain; /* важливо: картинка не розтягується */
+  object-fit: contain; 
   transition: transform 0.2s;
 }
 .main-img:hover {

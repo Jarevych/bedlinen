@@ -1,9 +1,8 @@
-// src/pages/FabricDetails.jsx
 import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../context/CartContext.jsx";
-import "../pages/styles/FabricDetails.css";
+import "../pages/styles/fabricDetails.css";
 
 const API_BASE = "http://localhost:5000";
 
