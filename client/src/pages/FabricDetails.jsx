@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../context/CartContext.jsx";
-import "../pages/styles/fabricDetails.css";
+import "../pages/styles/FabricDetails.css";
 
 const API_BASE = "http://localhost:5000";
 
