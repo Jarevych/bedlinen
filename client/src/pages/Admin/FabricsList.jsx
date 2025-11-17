@@ -25,7 +25,6 @@ export default function FabricsList() {
     try {
       await axios.delete(`${API_BASE}/api/fabrics/${id}`);
       setFabrics((prev) => prev.filter((f) => f._id !== id));
-      
     } catch (err) {
       console.error("Помилка при видаленні:", err);
     }

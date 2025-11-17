@@ -11,7 +11,7 @@ export default function EditFabric() {
   const [fabric, setFabric] = useState(null);
   const [mainImageFile, setMainImageFile] = useState(null);
   const [newAdditionalImages, setNewAdditionalImages] = useState([]);
-const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   useEffect(() => {
     axios
       .get(`${API_BASE}/api/fabrics/${id}`)
@@ -23,7 +23,10 @@ const token = localStorage.getItem("token");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFabric((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setFabric((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleMainImageChange = (e) => {
@@ -61,16 +64,21 @@ const token = localStorage.getItem("token");
       data.append("inStock", fabric.inStock);
 
       if (mainImageFile) data.append("image", mainImageFile);
-      newAdditionalImages.forEach((file) => data.append("additionalImages", file));
+      newAdditionalImages.forEach((file) =>
+        data.append("additionalImages", file)
+      );
       if (fabric.additionalImages) {
-        data.append("existingAdditionalImages", JSON.stringify(fabric.additionalImages));
+        data.append(
+          "existingAdditionalImages",
+          JSON.stringify(fabric.additionalImages)
+        );
       }
 
       await axios.put(`${API_BASE}/api/fabrics/${id}`, data, {
-       headers: {
-    "Content-Type": "multipart/form-data",
-    Authorization: `Bearer ${token}`
-  }
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       alert("✅ Тканину успішно відредаговано!");
@@ -122,7 +130,9 @@ const token = localStorage.getItem("token");
 
         <div className="current-images">
           <h4>Основне фото:</h4>
-          {fabric.image && <img src={`${API_BASE}${fabric.image}`} alt="Main" />}
+          {fabric.image && (
+            <img src={`${API_BASE}${fabric.image}`} alt="Main" />
+          )}
           <input type="file" onChange={handleMainImageChange} />
         </div>
 
@@ -134,10 +144,16 @@ const token = localStorage.getItem("token");
                 <div key={idx} className="additional-image-wrapper">
                   <img src={`${API_BASE}${img}`} alt={`Additional ${idx}`} />
                   <div className="image-actions">
-                    <button type="button" onClick={() => handleSetMainImage(idx)}>
+                    <button
+                      type="button"
+                      onClick={() => handleSetMainImage(idx)}
+                    >
                       Зробити основним
                     </button>
-                    <button type="button" onClick={() => handleRemoveAdditionalImage(idx)}>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAdditionalImage(idx)}
+                    >
                       Видалити
                     </button>
                   </div>
