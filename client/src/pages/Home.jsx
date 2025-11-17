@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Fabrics from "./Fabrics";
 import { CartContext } from "../context/CartContext.jsx";
+import "../pages/styles/Home.css";
 
 const API_BASE = "http://localhost:5000";
 
 function Home() {
   const [fabrics, setFabrics] = useState([]);
-  const [user, setUser] = useState(null);
-  const { cart } = useContext(CartContext); // ✅ беремо з контексту
+  // const { cart } = useContext(CartContext);
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -24,70 +24,78 @@ function Home() {
     if (fabrics.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % fabrics.length);
-      }, 3000);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [fabrics]);
-
-  const logout = () => setUser(null);
 
   if (fabrics.length === 0) {
     return <div className="loading">Завантаження зображень...</div>;
   }
 
+  // Обмеження кількості видимих мініатюр
+  const getVisibleThumbnails = () => {
+    const isMobile = window.innerWidth < 768;
+    const visibleCount = isMobile ? 3 : 7; // на десктопі більше
+    const half = Math.floor(visibleCount / 2);
+    const start = (currentIndex - half + fabrics.length) % fabrics.length;
+
+    return Array.from({ length: visibleCount }, (_, i) => (start + i) % fabrics.length);
+  };
+
+  const visibleIndices = getVisibleThumbnails();
+
   return (
-    <div className="app">
-      <header className="header">
-        <div className="nav">
-          <h1>🛏️ Bedlinen</h1>
-          <div className="nav-buttons">
-            {!user ? (
-              <button onClick={() => alert("Тут буде логін")}>Увійти</button>
-            ) : (
-              <>
-                <span>Вітаємо, {user.username}</span>
-                <button onClick={logout}>Вийти</button>
-              </>
-            )}
-            <button className="btn-cart" onClick={() => navigate("/cart")}>
-              🛒 Кошик ({cart.length})
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main>
-        <div className="hero">
-          <div className="slider">
-            {fabrics.map((fabric, idx) => (
-              <img
-                key={fabric._id}
-                src={`${API_BASE}${fabric.image}`}
-                alt={fabric.name}
-                className={`slide ${currentIndex === idx ? "active" : ""}`}
-              />
-            ))}
-          </div>
-
-          <div className="gallery">
-            {fabrics.map((fabric, idx) => (
-              <img
-                key={fabric._id}
-                src={`${API_BASE}${fabric.image}`}
-                alt={fabric.name}
-                className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
-                onClick={() => setCurrentIndex(idx)}
-              />
-            ))}
-          </div>
+    <div className="home-page">
+      <section className="hero">
+        {/* 🔹 Слайдер */}
+        <div className="slider">
+          {fabrics.map((fabric, idx) => (
+            <img
+              key={fabric._id}
+              src={`${API_BASE}${fabric.image}`}
+              alt={fabric.name}
+              className={`slide ${currentIndex === idx ? "active" : ""}`}
+            />
+          ))}
+          <button
+            className="nav prev"
+            onClick={() =>
+              setCurrentIndex((prev) => (prev - 1 + fabrics.length) % fabrics.length)
+            }
+          >
+            ❮
+          </button>
+          <button
+            className="nav next"
+            onClick={() =>
+              setCurrentIndex((prev) => (prev + 1) % fabrics.length)
+            }
+          >
+            ❯
+          </button>
         </div>
 
-        {/* ✅ передаємо addToCart з контексту */}
+        {/* 🔹 Галерея мініатюр */}
+        <div className="gallery">
+          {visibleIndices.map((idx) => (
+            <img
+              key={fabrics[idx]._id}
+              src={`${API_BASE}${fabrics[idx].image}`}
+              alt={fabrics[idx].name}
+              className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
+              onClick={() => setCurrentIndex(idx)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="fabrics-list">
         <Fabrics
           fabrics={fabrics}
           onSelectFabric={(fabric) => navigate(`/fabric/${fabric._id}`)}
         />
-      </main>
+      </section>
     </div>
   );
 }

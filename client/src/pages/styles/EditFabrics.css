@@ -1,0 +1,72 @@
+.add-fabric {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.add-fabric h3 { margin-bottom: 20px; }
+
+.add-fabric form input,
+.add-fabric form textarea,
+.add-fabric form button,
+.add-fabric form label {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.add-fabric form button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.current-images, .additional-images { margin-bottom: 20px; }
+
+.main-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.additional-images-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.additional-image-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.additional-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.image-actions {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  gap: 4px;
+}
+
+.image-actions button {
+  font-size: 12px;
+  padding: 2px 4px;
+  cursor: pointer;
+}

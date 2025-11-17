@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function AccountInfo({ user }) {
+  console.log(user)
   return (
     <div className="account-info">
       <h3>Мої дані</h3>

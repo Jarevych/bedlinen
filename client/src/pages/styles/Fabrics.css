@@ -1,0 +1,93 @@
+.fabrics {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fabrics h2 {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #222;
+}
+
+.fabrics-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.fabric-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 12px;
+}
+
+.fabric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.fabric-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.fabric-card h3 {
+  font-size: 1.2rem;
+  margin: 8px 0;
+  color: #222;
+}
+
+.fabric-card p {
+  font-size: 0.9rem;
+  margin: 4px 0;
+  color: #555;
+}
+
+/* ===== Кнопка деталі ===== */
+.details-btn {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.details-btn:hover {
+  background-color: #005fcc;
+}
+
+/* ===== Адаптив для планшетів ===== */
+@media (min-width: 600px) {
+  .fabrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== Адаптив для десктопів ===== */
+@media (min-width: 900px) {
+  .fabrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== Великі десктопи ===== */
+@media (min-width: 1200px) {
+  .fabrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

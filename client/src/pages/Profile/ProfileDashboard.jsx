@@ -5,7 +5,7 @@ import AccountInfo from "./AccountInfo.jsx";
 
 export default function ProfileDashboard() {
   const { user } = useContext(AuthContext);
-
+  console.log(user);
   if (!user) return <p>Будь ласка, увійдіть у систему.</p>;
 
   return (

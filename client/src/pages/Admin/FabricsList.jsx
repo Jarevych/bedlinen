@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import '../styles/admin-table.css'
-
+import "../styles/admin-table.css";
 
 const API_BASE = "http://localhost:5000";
 
 export default function FabricsList() {
   const [fabrics, setFabrics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -16,14 +17,15 @@ export default function FabricsList() {
         setFabrics(res.data);
         setLoading(false);
       })
-      .catch((err) => console.error("Помилка при отриманні постелей:", err));
+      .catch((err) => console.error("Помилка при отриманні тканин:", err));
   }, []);
-console.log(fabrics)
+
   const handleDelete = async (id) => {
-    if (!window.confirm("Точно видалити цю постіль?")) return;
+    if (!window.confirm("Точно видалити цю тканину?")) return;
     try {
       await axios.delete(`${API_BASE}/api/fabrics/${id}`);
       setFabrics((prev) => prev.filter((f) => f._id !== id));
+      
     } catch (err) {
       console.error("Помилка при видаленні:", err);
     }
@@ -33,9 +35,9 @@ console.log(fabrics)
 
   return (
     <div className="fabrics-list">
-      <h3>🧵 Всі постелі</h3>
+      <h3>🧵 Всі тканини</h3>
       {fabrics.length === 0 ? (
-        <p>Поки що немає постелей.</p>
+        <p>Поки що немає тканин.</p>
       ) : (
         <table className="admin-table">
           <thead>
@@ -44,6 +46,7 @@ console.log(fabrics)
               <th>Ціна</th>
               <th>Тип</th>
               <th>Наявність</th>
+              <th>Основне фото</th>
               <th>Дії</th>
             </tr>
           </thead>
@@ -52,12 +55,30 @@ console.log(fabrics)
               <tr key={fabric._id}>
                 <td>{fabric.name}</td>
                 <td>{fabric.pricePerMeter} грн</td>
-                <td>{fabric.type}</td>
+                <td>{fabric.fabric}</td>
                 <td>{fabric.inStock ? "✅" : "❌"}</td>
-                <td><img src={`${API_BASE}${fabric.image}`} alt={fabric.name} width="100" /></td>
                 <td>
-                  <button onClick={() => alert("Редагування скоро!")} className="btn-small">✏️</button>
-                  <button onClick={() => handleDelete(fabric._id)} className="btn-small red">🗑️</button>
+                  {fabric.image && (
+                    <img
+                      src={`${API_BASE}${fabric.image}`}
+                      alt={fabric.name}
+                      width="100"
+                    />
+                  )}
+                </td>
+                <td>
+                  <button
+                    onClick={() => navigate(`/admin/edit/${fabric._id}`)}
+                    className="btn-small"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDelete(fabric._id)}
+                    className="btn-small red"
+                  >
+                    🗑️
+                  </button>
                 </td>
               </tr>
             ))}

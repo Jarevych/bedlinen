@@ -1,0 +1,209 @@
+.fabric-details {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.back-btn {
+  margin-bottom: 15px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.fabric-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.fabric-gallery {
+  flex: 1;
+  min-width: 300px;
+}
+
+.main-image {
+  width: 100%;
+  max-width: 500px;
+  cursor: pointer;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.thumbnail:hover {
+  border-color: #007bff;
+}
+
+.fabric-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.size-selector {
+  margin: 15px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-add {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-add:hover { background: #218838; }
+
+.btn-order {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-order:hover { background: #e0a800; }
+
+/* Lightbox */
+.lightbox-overlay {
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  display:flex; justify-content:center; align-items:center;
+  z-index:10000;
+}
+
+.lightbox-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+.reset-main-btn {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reset-main-btn:hover {
+  background: #0056b3;
+}
+
+/* Modal швидкого замовлення */
+.modal-overlay {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.7);
+  display:flex; justify-content:center; align-items:center;
+  z-index: 10001;
+  padding: 10px;
+}
+
+.modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  /* height: 100%; */
+}
+
+.modal input, .modal select {
+  width: 100%;
+  padding: 7px;
+  margin: 5px 0 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn {
+  background: #28a745;
+  color: white;
+  border:none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover { background: #218838; }
+
+.btn-cancel {
+  background: #dc3545;
+  color:white;
+  border:none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor:pointer;
+}
+
+.btn-cancel:hover { background: #c82333; }
+.size-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.size-table th,
+.size-table td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.size-table th {
+  background-color: #f6f6f6;
+  font-weight: bold;
+}
+
+.elastic-sheet {
+  margin: 15px 0;
+}
+
+.elastic-inputs {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.custom-size-fields {
+  margin-top: 20px;
+}
+
+.custom-part {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}

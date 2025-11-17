@@ -1,34 +1,39 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { CartContext } from "../context/CartContext.jsx";
+import "../pages/styles/Header.css";
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useContext(AuthContext);
+  const { cart } = useContext(CartContext);
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="flex justify-between items-center px-6 py-4 bg-gray-100 shadow">
-      <Link to="/" className="font-bold text-lg">🛏️ Постіль</Link>
-      <nav className="flex items-center gap-4">
-        {user ? (
-          <>
-            {user.role === "admin" ? (
-              <Link to="/admin" className="hover:underline">Адмінка</Link>
-            ) : (
-              <Link to="/profile" className="hover:underline">Кабінет</Link>
-            )}
-            <button
-              onClick={logout}
-              className="text-red-500 hover:underline"
-            >
-              Вихід
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="hover:underline">Увійти</Link>
-            <Link to="/register" className="hover:underline">Реєстрація</Link>
-          </>
-        )}
-      </nav>
+    <header className="header">
+      <div className="header-inner">
+        <Link to="/" className="logo"><img className="header_logo" src="/logo_header.jpg" alt="logo" /></Link>
+
+        {/* Іконки Кабінету та Корзини */}
+        <div className="header-icons">
+          <button className="icon-btn" onClick={() => navigate(user ? "/profile" : "/login")}>
+            👤
+          </button>
+          <button className="icon-btn" onClick={() => navigate("/cart")}>
+            🛒 {cart.length > 0 ? `(${cart.length})` : ""}
+          </button>
+          {/* Бургер меню для мобайлу */}
+          <button className="burger" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+        </div>
+
+        {/* Повне меню */}
+        <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+          {user?.role === "admin" && <Link to="/admin">Адмінка</Link>}
+          {!user && <Link to="/register">Реєстрація</Link>}
+          {user && <button className="logout-btn" onClick={logout}>Вийти</button>}
+        </nav>
+      </div>
     </header>
   );
 };

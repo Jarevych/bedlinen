@@ -1,0 +1,110 @@
+.header {
+  width: 100%;
+  background-color: #f5f1e8;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 0px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.header_logo {
+  height: 45px;
+  width: 100%;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.logo {
+  /* font-size: 1.4rem;
+  font-weight: bold; */
+  color: #222;
+  text-decoration: none;
+}
+
+/* Іконки */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* ===== НАВІГАЦІЯ ===== */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Мобільний адаптив */
+@media (max-width: 600px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 10px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .nav-links.open {
+    display: flex;
+  }
+
+  .burger {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+}
+
+/* Десктоп */
+@media (min-width: 601px) {
+  .burger {
+    display: none;
+  }
+}
+
+/* Посилання */
+.nav-links a, .logout-btn {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover, .logout-btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* Кнопки */
+.logout-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #0056b3;
+}

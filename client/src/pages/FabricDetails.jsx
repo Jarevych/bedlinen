@@ -1,93 +1,84 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import './fabricDetails.css'
-import axios from "axios";
 import { CartContext } from "../context/CartContext.jsx";
+import axios from "axios";
+import "../pages/styles/FabricDetails.css";
 
 const API_BASE = "http://localhost:5000";
 
-function FabricDetails() {
+const SIZE_TABLES = {
+  1.5: [
+    { name: "Наволочка", count: 1, size: "50×70 см" },
+    { name: "Підковдра", count: 1, size: "160×200 см" },
+    { name: "Простирадло", count: 1, size: "200×220 см" },
+  ],
+  2: [
+    { name: "Наволочка", count: 2, size: "50×70 см" },
+    { name: "Підковдра", count: 1, size: "180×210 см" },
+    { name: "Простирадло", count: 1, size: "220×240 см" },
+  ],
+  euro: [
+    { name: "Наволочка", count: 2, size: "50×70 см" },
+    { name: "Підковдра", count: 1, size: "200×220 см" },
+    { name: "Простирадло", count: 1, size: "240×260 см" },
+  ],
+  king: [
+    { name: "Наволочка", count: 2, size: "50×70 см" },
+    { name: "Підковдра", count: 1, size: "220×240 см" },
+    { name: "Простирадло", count: 1, size: "260×280 см" },
+  ],
+};
+
+export default function FabricDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [fabric, setFabric] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { addToCart } = useContext(CartContext);
-  const [showModal, setShowModal] = useState(false);
 
-  // поля для замовлення
-  const [orderData, setOrderData] = useState({
-    name: "",
-    phone: "",
-    size: "queen",
-    customSize: {
+  const [fabric, setFabric] = useState(null);
+  const [size, setSize] = useState("1.5");
+  const [comment, setComment] = useState("");
+
+  const [customSize, setCustomSize] = useState({
     pillowcase: { length: "", width: "" },
     duvet: { length: "", width: "" },
-    sheet: { length: "", width: "", withElastic: false, mattressHeight: "" },
-  },
+    sheet: {
+      length: "",
+      width: "",
+      withElastic: false,
+      mattressHeight: "",
+    },
   });
 
   useEffect(() => {
     axios
       .get(`${API_BASE}/api/fabrics/${id}`)
-      .then((res) => {
-        setFabric(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Помилка завантаження тканини:", err);
-        setLoading(false);
-      });
+      .then((res) => setFabric(res.data))
+      .catch((err) => console.error("Помилка завантаження тканини:", err));
   }, [id]);
 
-  if (loading) return <div className="loading">Завантаження...</div>;
-  if (!fabric) return <div>Тканину не знайдено 😢</div>;
+  if (!fabric) return <p>Завантаження...</p>;
 
-  const handleAddToCart = () => {
-    addToCart(fabric);
-    alert(`✅ ${fabric.name} додано в кошик!`);
-  };
-
-  const handleQuickOrder = () => setShowModal(true);
-console.log("📦 Дані перед відправкою:", {
-  name: orderData.name,
-  phone: orderData.phone,
-  size: orderData.size,
-  fabricId: fabric._id,
-  customSize: orderData.size === "custom" ? orderData.customSize : null,
-});
-  const handleSubmitOrder = async () => {
-    try {
-      await axios.post(`${API_BASE}/api/orders`, {
-        name: orderData.name,
-        phone: orderData.phone,
-        size: orderData.size,
-        fabricId: fabric._id,
-        customSize: orderData.size === "custom" ? orderData.customSize : null,
-      });
-      alert("🚀 Замовлення успішно оформлено!");
-      setShowModal(false);
-    } catch (err) {
-      console.error("Помилка при оформленні замовлення:", err);
-      alert("Помилка при оформленні замовлення!");
-    }
-  };
-
-  const updateCustomSize = (part, field, value) => {
-  setOrderData((prev) => {
-    const updated = {
+  const updateCustom = (part, field, value) => {
+    setCustomSize((prev) => ({
       ...prev,
-      customSize: {
-        ...prev.customSize,
-        [part]: {
-          ...prev.customSize?.[part],
-          [field]: value,
-        },
+      [part]: {
+        ...prev[part],
+        [field]: value,
       },
+    }));
+  };
+
+  const handleAdd = () => {
+    const item = {
+      ...fabric,
+      size,
+      customSize: size === "custom" ? customSize : null,
+      comment,
     };
-    console.log("🧱 Оновлений customSize:", updated.customSize);
-    return updated;
-  });
-};
+
+    addToCart(item);
+    alert("Додано до кошика!");
+  };
 
   return (
     <div className="fabric-details">
@@ -95,147 +86,138 @@ console.log("📦 Дані перед відправкою:", {
         ← Назад
       </button>
 
-      <div className="fabric-info">
+      <h2>{fabric.name}</h2>
+      <p>{fabric.description}</p>
+
+      {fabric.image && (
         <img
           src={`${API_BASE}${fabric.image}`}
           alt={fabric.name}
-          className="fabric-details-img"
+          className="fabric-main-image"
         />
+      )}
 
-        <div className="fabric-text">
-          <h2>{fabric.name}</h2>
-          {fabric.description && <p>{fabric.description}</p>}
-          <p>
-            <strong>Ціна:</strong> {fabric.pricePerMeter} грн/м
-          </p>
-          <p>
-            <strong>Статус:</strong>{" "}
-            {fabric.inStock ? "В наявності ✅" : "Немає ❌"}
-          </p>
+      <p>
+        <strong>Ціна:</strong> {fabric.pricePerMeter} грн/м
+      </p>
 
-          <div className="size-selector">
-            <label htmlFor="size">Розмір:</label>
-            <select
-              id="size"
-              value={orderData.size}
-              onChange={(e) =>
-                setOrderData({ ...orderData, size: e.target.value })
-              }
-            >
-              <option value="1.5">1.5 спальний</option>
-              <option value="2">Двоспальний</option>
-              <option value="euro">Євро</option>
-              <option value="king">King Size</option>
-              <option value="custom">Власний розмір</option>
-            </select>
-          </div>
+      {/* Вибір розміру */}
+      <label>Розмір набору:</label>
+      <select value={size} onChange={(e) => setSize(e.target.value)}>
+        <option value="1.5">1.5 спальний</option>
+        <option value="2">Двоспальний</option>
+        <option value="euro">Євро</option>
+        <option value="king">King Size</option>
+        <option value="custom">Власний розмір</option>
+      </select>
 
-          <div className="actions">
-            <button className="btn-add" onClick={handleAddToCart}>
-              🛒 Додати в кошик
-            </button>
-            <button className="btn-order" onClick={handleQuickOrder}>
-              ⚡ Швидке замовлення
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Таблиця стандартних розмірів */}
+      {size !== "custom" && (
+        <table className="size-table">
+          <thead>
+            <tr>
+              <th>Елемент</th>
+              <th>Кількість</th>
+              <th>Розмір</th>
+            </tr>
+          </thead>
+          <tbody>
+            {SIZE_TABLES[size].map((item, i) => (
+              <tr key={i}>
+                <td>{item.name}</td>
+                <td>{item.count}</td>
+                <td>{item.size}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
-      {/* Модалка швидкого замовлення */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>⚡ Швидке замовлення</h3>
-            <p><strong>{fabric.name}</strong></p>
+      {/* Кастомні розміри */}
+      {size === "custom" && (
+        <div className="custom-inputs">
+          <h3>Кастомні розміри</h3>
+
+          <h4>Наволочка</h4>
+          <input
+            type="number"
+            placeholder="Довжина"
+            value={customSize.pillowcase.length}
+            onChange={(e) =>
+              updateCustom("pillowcase", "length", e.target.value)
+            }
+          />
+          <input
+            type="number"
+            placeholder="Ширина"
+            value={customSize.pillowcase.width}
+            onChange={(e) =>
+              updateCustom("pillowcase", "width", e.target.value)
+            }
+          />
+
+          <h4>Підковдра</h4>
+          <input
+            type="number"
+            placeholder="Довжина"
+            value={customSize.duvet.length}
+            onChange={(e) => updateCustom("duvet", "length", e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Ширина"
+            value={customSize.duvet.width}
+            onChange={(e) => updateCustom("duvet", "width", e.target.value)}
+          />
+
+          <h4>Простирадло</h4>
+          <input
+            type="number"
+            placeholder="Довжина"
+            value={customSize.sheet.length}
+            onChange={(e) => updateCustom("sheet", "length", e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Ширина"
+            value={customSize.sheet.width}
+            onChange={(e) => updateCustom("sheet", "width", e.target.value)}
+          />
+
+          <label className="elastic-check">
             <input
-              type="text"
-              placeholder="Ваше ім'я"
-              value={orderData.name}
+              type="checkbox"
+              checked={customSize.sheet.withElastic}
               onChange={(e) =>
-                setOrderData({ ...orderData, name: e.target.value })
+                updateCustom("sheet", "withElastic", e.target.checked)
               }
             />
+            Простирадло на резинці
+          </label>
+
+          {customSize.sheet.withElastic && (
             <input
-              type="tel"
-              placeholder="Ваш телефон"
-              value={orderData.phone}
+              type="number"
+              placeholder="Висота матрацу"
+              value={customSize.sheet.mattressHeight}
               onChange={(e) =>
-                setOrderData({ ...orderData, phone: e.target.value })
+                updateCustom("sheet", "mattressHeight", e.target.value)
               }
             />
-
-            {/* Якщо власний розмір */}
-            {orderData.size === "custom" && (
-              <div className="custom-size-fields">
-                <h4>Введіть власні розміри:</h4>
-
-                {["pillowcase", "duvet", "sheet"].map((part) => (
-                  <div key={part}>
-                    <strong>
-                      {part === "pillowcase"
-                        ? "Наволочка"
-                        : part === "duvet"
-                        ? "Підковдра"
-                        : "Простирадло"}
-                    </strong>
-                    <input
-                      type="number"
-                      placeholder="Довжина (см)"
-                      onChange={(e) =>
-                        updateCustomSize(part, "length", e.target.value)
-                      }
-                    />
-                    <input
-                      type="number"
-                      placeholder="Ширина (см)"
-                      onChange={(e) =>
-                        updateCustomSize(part, "width", e.target.value)
-                      }
-                    />
-
-                    {part === "sheet" && (
-                      <>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={
-                              orderData.customSize?.sheet?.withElastic || false
-                            }
-                            onChange={(e) =>
-                              updateCustomSize("sheet", "withElastic", e.target.checked)
-                            }
-                          />
-                          Простирадло на резинці
-                        </label>
-                        {orderData.customSize?.sheet?.withElastic && (
-                          <input
-                            type="number"
-                            placeholder="Висота матрацу (см)"
-                            onChange={(e) =>
-                              updateCustomSize("sheet", "mattressHeight", e.target.value)
-                            }
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="modal-actions">
-              <button className="btn" onClick={handleSubmitOrder}>
-                ✅ Підтвердити
-              </button>
-              <button className="btn-cancel" onClick={() => setShowModal(false)}>
-                ❌ Скасувати
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       )}
+
+      {/* Коментар */}
+      <textarea
+        placeholder="Коментар до набору..."
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
+
+      <button className="btn-add" onClick={handleAdd}>
+        Додати в кошик
+      </button>
     </div>
   );
 }
-
-export default FabricDetails;

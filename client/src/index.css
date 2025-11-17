@@ -76,10 +76,10 @@ body {
   padding: 0;
 }
 
-header, footer {
+/* header, footer {
   text-align: center;
   padding: 12px;
-}
+} */
 
 h1, h2, h3 {
   color: #333;
