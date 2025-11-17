@@ -42,7 +42,14 @@ const app = express();
 // Middleware
  app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://lavanda-dr.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.post("/api/fabrics/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
