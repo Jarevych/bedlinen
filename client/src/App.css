@@ -187,7 +187,7 @@ z-index: 5;
   opacity: 1;
 }
 
-.gallery {
+/* .gallery {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -196,7 +196,7 @@ z-index: 5;
   justify-content: center;
   gap: 1rem;
   margin-top: 1.5rem;
-}
+} */
 
 .thumbnail {
   width: 100px;
