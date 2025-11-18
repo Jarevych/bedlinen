@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/AddFabric.css";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 const token = localStorage.getItem("token");
 export default function AddFabric() {
   const [form, setForm] = useState({
@@ -18,7 +18,10 @@ export default function AddFabric() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleMainImageChange = (e) => {
@@ -44,13 +47,19 @@ export default function AddFabric() {
 
       await axios.post(`${API_BASE}/api/fabrics`, data, {
         headers: {
-    "Content-Type": "multipart/form-data",
-    Authorization: `Bearer ${token}`}
-  
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       alert("✅ Тканину успішно додано!");
-      setForm({ name: "", pricePerMeter: "", fabric: "Бязь", description: "", inStock: true });
+      setForm({
+        name: "",
+        pricePerMeter: "",
+        fabric: "Бязь",
+        description: "",
+        inStock: true,
+      });
       setMainImageFile(null);
       setAdditionalImages([]);
     } catch (err) {

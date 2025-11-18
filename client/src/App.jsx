@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import "./App.css";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-// import UploadFabric from "./pages/AddFabric";
 import Cart from "./pages/Cart";
 import FabricDetails from "./pages/FabricDetails";
 import Register from "./pages/Register";

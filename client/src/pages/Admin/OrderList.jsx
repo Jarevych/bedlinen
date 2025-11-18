@@ -3,7 +3,7 @@ import "../styles/OrdersList.css";
 import axios from "axios";
 import "../styles/admin-table.css";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function OrdersList() {
   const [orders, setOrders] = useState([]);

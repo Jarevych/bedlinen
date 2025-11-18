@@ -8,6 +8,7 @@ export default function UploadFabric({ onCreated }) {
   const [price, setPrice] = useState("");
 
   const handleFile = (e) => setFile(e.target.files[0]);
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,13 +17,13 @@ export default function UploadFabric({ onCreated }) {
     // 1) upload file
     const fd = new FormData();
     fd.append("image", file);
-    const uploadRes = await axios.post("http://localhost:5000/api/fabrics/upload", fd, {
+    const uploadRes = await axios.post(`${API_BASE}/api/fabrics`, fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     const imageUrl = uploadRes.data.imageUrl; // e.g. "/uploads/12345.jpg"
 
     // 2) create fabric record
-    const createRes = await axios.post("http://localhost:5000/api/fabrics", {
+    const createRes = await axios.post(`${API_BASE}/api/fabrics`, {
       name,
       pricePerMeter: Number(price),
       image: imageUrl,
