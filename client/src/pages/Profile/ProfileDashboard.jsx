@@ -1,37 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import MyOrders from "./MyOrders.jsx";
 import AccountInfo from "./AccountInfo.jsx";
+import MyOrders from "./MyOrders.jsx";
+import "../styles/ProfileDashboard.css";
 
 export default function ProfileDashboard() {
-  const { user } = useContext(AuthContext);
-  console.log(user);
-  if (!user) return <p>Будь ласка, увійдіть у систему.</p>;
+  const { user, token, setUser } = useContext(AuthContext);
+  const [activeTab, setActiveTab] = useState("info"); // "info" | "orders"
+
+  const handleUpdateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
+  if (!user) return <p>Увійдіть щоб переглянути профіль</p>;
 
   return (
-    <div className="profile-container">
-      <h2>👤 Кабінет користувача</h2>
-      <AccountInfo user={user} />
-      <MyOrders userId={user.id} />
+    <div className="dashboard-container">
+      <h2>👤 Мій профіль</h2>
+      
+      <div className="tabs">
+        <button
+          className={activeTab === "info" ? "active" : ""}
+          onClick={() => setActiveTab("info")}
+        >
+          Дані акаунту
+        </button>
+        <button
+          className={activeTab === "orders" ? "active" : ""}
+          onClick={() => setActiveTab("orders")}
+        >
+          Мої замовлення
+        </button>
+      </div>
+
+      <div className="tab-content">
+        {activeTab === "info" && <AccountInfo user={user} token={token} onUpdate={handleUpdateUser} />}
+        {activeTab === "orders" && <MyOrders />}
+      </div>
     </div>
   );
 }
-// import React from "react";
-// import { Link, Outlet } from "react-router-dom";
-
-// export default function ProfileDashboard() {
-//   return (
-//     <div className="dashboard">
-//       <aside className="sidebar">
-//         <h2>Мій кабінет</h2>
-//         <nav>
-//           <Link to="/profile">👤 Мої дані</Link>
-//           <Link to="/profile/orders">🧾 Мої замовлення</Link>
-//         </nav>
-//       </aside>
-//       <main className="dashboard-content">
-//         <Outlet />
-//       </main>
-//     </div>
-//   );
-// }

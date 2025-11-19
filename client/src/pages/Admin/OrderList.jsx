@@ -4,7 +4,7 @@ import axios from "axios";
 import "../styles/admin-table.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
-
+ const token = localStorage.getItem("token");
 export default function OrdersList() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,9 @@ export default function OrdersList() {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE}/api/orders`)
+      .get(`${API_BASE}/api/orders`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setOrders(res.data);
         setLoading(false);
@@ -106,7 +108,7 @@ export default function OrdersList() {
                 </td>
                 <td className={`status-${order.status}`}>{order.status}</td>
                 <td>
-                  <td>
+                  
                     {order.size === "custom" && order.customSize ? (
                       <div className="custom-size-info">
                         <p>
@@ -142,6 +144,7 @@ export default function OrdersList() {
                       order.size
                     )}
                   </td>
+                  <td>
                   <select
                     value={order.status}
                     onChange={(e) =>

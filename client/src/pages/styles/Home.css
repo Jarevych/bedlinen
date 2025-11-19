@@ -78,7 +78,7 @@
 }
 
 /* ===== ГАЛЕРЕЯ МІНІАТЮР ===== */
-.gallery {
+.slider_gallery {
   display: flex;
   justify-content: center;
   align-items: center;

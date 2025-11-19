@@ -16,8 +16,7 @@ function Fabrics({ fabrics, onSelectFabric }) {
             key={fabric._id}
           >
             <img
-              src={`${API_BASE}${fabric.image}`}
-              alt={fabric.name}
+              src={fabric.image}              alt={fabric.name}
               className="fabric-img"
             />
             <h3>{fabric.name}</h3>

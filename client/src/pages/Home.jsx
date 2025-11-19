@@ -42,6 +42,7 @@ function Home() {
 
     return Array.from({ length: visibleCount }, (_, i) => (start + i) % fabrics.length);
   };
+console.log(fabrics);
 
   const visibleIndices = getVisibleThumbnails();
 
@@ -53,7 +54,7 @@ function Home() {
           {fabrics.map((fabric, idx) => (
             <img
               key={fabric._id}
-              src={`${API_BASE}${fabric.image}`}
+              src={fabric.image}
               alt={fabric.name}
               className={`slide ${currentIndex === idx ? "active" : ""}`}
             />
@@ -77,12 +78,12 @@ function Home() {
         </div>
 
         {/* 🔹 Галерея мініатюр */}
-        <div className="gallery">
+        <div className="slider_gallery">
           {visibleIndices.map((idx) => (
             <img
-              key={fabrics[idx]._id}
-              src={`${API_BASE}${fabrics[idx].image}`}
-              alt={fabrics[idx].name}
+              key={[idx]._id}
+              src={[idx].image}
+              alt={[idx].name}
               className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
               onClick={() => setCurrentIndex(idx)}
             />

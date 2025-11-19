@@ -3,16 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CartContext } from "../context/CartContext.jsx";
 import "../pages/styles/FabricDetails.css";
-
+ const token = localStorage.getItem("token");
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 const SIZE_TABLES = {
-  "1.5": [
+  1.5: [
     { name: "Наволочка", count: 1, size: "50×70" },
     { name: "Підковдра", count: 1, size: "160×200" },
     { name: "Простирадло", count: 1, size: "200×220" },
   ],
-  "2": [
+  2: [
     { name: "Наволочка", count: 2, size: "50×70" },
     { name: "Підковдра", count: 1, size: "180×210" },
     { name: "Простирадло", count: 1, size: "220×240" },
@@ -66,7 +66,9 @@ export default function FabricDetails() {
       .then((res) => {
         if (cancelled) return;
         setFabric(res.data);
-        setMainImage(res.data.image || (res.data.additionalImages?.[0] ?? null));
+        setMainImage(
+          res.data.image || (res.data.additionalImages?.[0] ?? null)
+        );
         setLoading(false);
       })
       .catch((err) => {
@@ -141,8 +143,10 @@ export default function FabricDetails() {
                 pillowcase: null,
                 duvet: null,
                 sheet: {
-                  length: Number(orderData.customSize.sheet.length) || defL || null,
-                  width: Number(orderData.customSize.sheet.width) || defW || null,
+                  length:
+                    Number(orderData.customSize.sheet.length) || defL || null,
+                  width:
+                    Number(orderData.customSize.sheet.width) || defW || null,
                   withElastic: !!orderData.customSize.sheet.withElastic,
                   mattressHeight:
                     orderData.customSize.sheet.withElastic &&
@@ -193,8 +197,10 @@ export default function FabricDetails() {
                 pillowcase: null,
                 duvet: null,
                 sheet: {
-                  length: Number(orderData.customSize.sheet.length) || defL || null,
-                  width: Number(orderData.customSize.sheet.width) || defW || null,
+                  length:
+                    Number(orderData.customSize.sheet.length) || defL || null,
+                  width:
+                    Number(orderData.customSize.sheet.width) || defW || null,
                   withElastic: !!orderData.customSize.sheet.withElastic,
                   mattressHeight: orderData.customSize.sheet.withElastic
                     ? Number(orderData.customSize.sheet.mattressHeight) || null
@@ -212,7 +218,11 @@ export default function FabricDetails() {
         comment: orderData.comment || "",
       };
 
-      await axios.post(`${API_BASE}/api/orders`, payload);
+      await axios.post(`${API_BASE}/api/orders`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("🚀 Швидке замовлення відправлено!");
       setShowQuickModal(false);
     } catch (err) {
@@ -248,7 +258,7 @@ export default function FabricDetails() {
         <div className="gallery">
           {mainImage && (
             <img
-              src={`${API_BASE}${mainImage}`}
+              src={mainImage}
               alt={fabric.name}
               className="main-img"
               onClick={() => openLightbox(mainImage)}
@@ -260,7 +270,7 @@ export default function FabricDetails() {
               {thumbnails.map((t, i) => (
                 <img
                   key={i}
-                  src={`${API_BASE}${t}`}
+                  src={t}
                   alt={`thumb-${i}`}
                   className={`thumb ${t === mainImage ? "active" : ""}`}
                   onClick={() => setMainImage(t)}
@@ -314,13 +324,17 @@ export default function FabricDetails() {
                   type="number"
                   placeholder="Довжина (см) — опційно"
                   value={orderData.customSize.sheet.length}
-                  onChange={(e) => updateCustom("sheet", "length", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("sheet", "length", e.target.value)
+                  }
                 />
                 <input
                   type="number"
                   placeholder="Ширина (см) — опційно"
                   value={orderData.customSize.sheet.width}
-                  onChange={(e) => updateCustom("sheet", "width", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("sheet", "width", e.target.value)
+                  }
                 />
                 <input
                   type="number"
@@ -387,13 +401,17 @@ export default function FabricDetails() {
                   type="number"
                   placeholder="Довжина (см)"
                   value={orderData.customSize.duvet.length}
-                  onChange={(e) => updateCustom("duvet", "length", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("duvet", "length", e.target.value)
+                  }
                 />
                 <input
                   type="number"
                   placeholder="Ширина (см)"
                   value={orderData.customSize.duvet.width}
-                  onChange={(e) => updateCustom("duvet", "width", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("duvet", "width", e.target.value)
+                  }
                 />
               </div>
 
@@ -403,13 +421,17 @@ export default function FabricDetails() {
                   type="number"
                   placeholder="Довжина (см)"
                   value={orderData.customSize.sheet.length}
-                  onChange={(e) => updateCustom("sheet", "length", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("sheet", "length", e.target.value)
+                  }
                 />
                 <input
                   type="number"
                   placeholder="Ширина (см)"
                   value={orderData.customSize.sheet.width}
-                  onChange={(e) => updateCustom("sheet", "width", e.target.value)}
+                  onChange={(e) =>
+                    updateCustom("sheet", "width", e.target.value)
+                  }
                 />
 
                 <label className="elastic-check">

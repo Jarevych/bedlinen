@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+import dotenv from "dotenv";
 
+dotenv.config();
 // ✅ Перевіряє токен
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;

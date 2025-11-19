@@ -26,7 +26,7 @@ export default function UploadFabric({ onCreated }) {
     // 1️⃣ upload
     const fd = new FormData();
     fd.append("image", file);
-    const uploadRes = await axios.post("http://localhost:5000/api/fabrics/upload", fd, {
+    const uploadRes = await axios.post("http://localhost:5000/api/fabrics", fd, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,

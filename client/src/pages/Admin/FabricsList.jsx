@@ -4,7 +4,7 @@ import axios from "axios";
 import "../styles/admin-table.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
-
+const token = localStorage.getItem("token");
 export default function FabricsList() {
   const [fabrics, setFabrics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,9 @@ export default function FabricsList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Точно видалити цю тканину?")) return;
     try {
-      await axios.delete(`${API_BASE}/api/fabrics/${id}`);
+      await axios.delete(`${API_BASE}/api/fabrics/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setFabrics((prev) => prev.filter((f) => f._id !== id));
     } catch (err) {
       console.error("Помилка при видаленні:", err);
@@ -59,7 +61,7 @@ export default function FabricsList() {
                 <td>
                   {fabric.image && (
                     <img
-                      src={`${API_BASE}${fabric.image}`}
+                      src={fabric.image}
                       alt={fabric.name}
                       width="100"
                     />

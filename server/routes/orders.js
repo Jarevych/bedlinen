@@ -1,12 +1,12 @@
 import express from "express";
 import Order from "../models/Order.js";
-
+import { authMiddleware, isAdmin } from "../middleware/authMiddleware.js";
 const router = express.Router();
-
+import { optionalAuth } from "../middleware/optionalMiddleware.js";
 /**
  * 🛍️ Створення нового замовлення
  */
-router.post("/", async (req, res) => {
+router.post("/", optionalAuth, async (req, res) => {
   try {
     const { name, phone, size, fabricId, customSize, comment } = req.body;
 
@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
 
     // 🧾 Формування замовлення
     const newOrder = new Order({
+      user: req.user?.id || null, 
       name,
       phone,
       size,
@@ -43,7 +44,7 @@ router.post("/", async (req, res) => {
 /**
  * 📋 Отримати всі замовлення (для адмінки)
  */
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, isAdmin, async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("fabric", "name pricePerMeter image")
@@ -55,5 +56,16 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Помилка при отриманні замовлень" });
   }
 });
+router.get("/my", authMiddleware, async (req, res) => {
+  try {
+    const myOrders = await Order.find({ user: req.user.id })
+      .populate("fabric", "name pricePerMeter image")
+      .sort({ createdAt: -1 });
 
+    res.json(myOrders);
+  } catch (err) {
+    console.error("❌ Помилка при отриманні замовлень користувача:", err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
 export default router;

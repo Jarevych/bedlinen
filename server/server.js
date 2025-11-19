@@ -1,27 +1,34 @@
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+import cloudinary from "./config/cloudinary.js";
+
+// Load env
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import fs from "fs";
-const uploadsDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
+const app = express();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const safeName = Date.now() + "-" + Math.round(Math.random() * 1e9) + path.extname(file.originalname);
-    cb(null, safeName);
-  },
-});
+// ===== MIDDLEWARE =====
+app.use(cors({
+  origin: [
+    "https://lavanda-dr.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+  ],
+  credentials: true,
+}));
+
+app.use(express.json());
+
+// ========== MULTER (memory) ==========
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowed = /jpeg|jpg|png/;
@@ -32,38 +39,41 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter,
 });
 
-dotenv.config();
-const app = express();
+// ========== CLOUDINARY UPLOAD ENDPOINT ==========
+app.post("/api/fabrics/upload", upload.single("image"), async (req, res) => {
+  try {
 
-// Middleware
- app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+    if (!req.file) {
+      return res.status(400).json({ ok: false, message: "No file uploaded" });
+    }
 
-app.use(cors({
-  origin: [
-    "https://lavanda-dr.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:3000"
-  ],
-  credentials: true
-}));
-app.use(express.json());
-app.post("/api/fabrics/upload", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ ok: false, message: "No file uploaded" });
+    // Convert buffer → base64
+    const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+
+    // Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(base64Image, {
+      folder: "lavanda_fabrics",
+    });
+
+    return res.json({
+      ok: true,
+      imageUrl: uploadResult.secure_url,
+    });
+
+  } catch (err) {
+    console.error("Cloudinary upload error:", err);
+    return res.status(500).json({ ok: false, message: "Upload failed" });
   }
-  // return path that client can use directly
-  const imageUrl = `/uploads/${req.file.filename}`;
-  res.json({ ok: true, imageUrl });
 });
 
-// Routes
+// ===== ROUTES =====
 import fabricRoutes from "./routes/fabrics.js";
 import orderRoutes from "./routes/orders.js";
-import userRoutes from "./routes/userRoutes.js"
+import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/auth.js";
 
 app.use("/api/fabrics", fabricRoutes);
@@ -73,16 +83,12 @@ app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => res.send("API працює ✅"));
 
-// MongoDB
+// ===== MONGODB =====
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.log("❌ Mongo error:", err));
 
-
-
-
-
-  // Start server
+// ===== START SERVER =====
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

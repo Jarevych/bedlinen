@@ -70,21 +70,28 @@ export const addFabric = async (req, res) => {
       pricePerMeter,
       fabric,
       inStock: inStock === "true" || inStock === true,
-      description,
+      description
     });
 
+    /* ================================
+       CLOUDINARY FILES
+    ================================= */
+
+    // Головне фото
     if (req.files?.image) {
-      newFabric.image = API_UPLOADS + req.files.image[0].filename;
+      newFabric.image = req.files.image[0].path; // Cloudinary URL
     }
 
+    // Додаткові фото
     if (req.files?.additionalImages) {
-      newFabric.additionalImages = req.files.additionalImages.map(f => API_UPLOADS + f.filename);
+      newFabric.additionalImages = req.files.additionalImages.map(file => file.path); // URL
     }
 
     await newFabric.save();
     res.status(201).json(newFabric);
+
   } catch (err) {
-    console.error(err);
+    console.error("ADD FABRIC ERROR:", err);
     res.status(500).json({ message: "Помилка при додаванні тканини" });
   }
 };
@@ -92,32 +99,35 @@ export const addFabric = async (req, res) => {
 export const updateFabric = async (req, res) => {
   try {
     const { name, pricePerMeter, fabric, description, inStock, existingAdditionalImages } = req.body;
+
     const fabricToUpdate = await Fabric.findById(req.params.id);
     if (!fabricToUpdate) return res.status(404).json({ message: "Fabric not found" });
 
-    // Оновлюємо текстові поля
     fabricToUpdate.name = name;
     fabricToUpdate.pricePerMeter = pricePerMeter;
     fabricToUpdate.fabric = fabric;
     fabricToUpdate.description = description;
-    fabricToUpdate.inStock = inStock === 'true' || inStock === true; // приводимо до boolean
+    fabricToUpdate.inStock = inStock === "true" || inStock === true;
 
-    // Обробка основного фото
+    // Основне фото
     if (req.files?.image) {
-      fabricToUpdate.image = "/uploads/" + req.files.image[0].filename;
+      fabricToUpdate.image = req.files.image[0].path; // Cloudinary URL
     }
 
-    // Обробка додаткових фото
-    let additionalImages = existingAdditionalImages ? JSON.parse(existingAdditionalImages) : [];
+    // Додаткові фото — існуючі + нові
+    let additional = existingAdditionalImages ? JSON.parse(existingAdditionalImages) : [];
+
     if (req.files?.additionalImages) {
-      additionalImages.push(...req.files.additionalImages.map(file => "/uploads/" + file.filename));
+      additional.push(...req.files.additionalImages.map(file => file.path));
     }
-    fabricToUpdate.additionalImages = additionalImages;
+
+    fabricToUpdate.additionalImages = additional;
 
     await fabricToUpdate.save();
     res.json(fabricToUpdate);
+
   } catch (error) {
-    console.error(error);
+    console.error("UPDATE FABRIC ERROR:", error);
     res.status(400).json({ message: error.message });
   }
 };
