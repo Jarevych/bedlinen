@@ -45,7 +45,7 @@ function Home() {
 console.log(fabrics);
 
   const visibleIndices = getVisibleThumbnails();
-
+console.log(visibleIndices);
   return (
     <div className="home-page">
       <section className="hero">
@@ -82,7 +82,7 @@ console.log(fabrics);
           {visibleIndices.map((idx) => (
             <img
               key={[idx]._id}
-              src={[idx].image}
+              src={fabrics[idx].image}
               alt={[idx].name}
               className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
               onClick={() => setCurrentIndex(idx)}
