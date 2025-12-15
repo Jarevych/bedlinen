@@ -138,7 +138,7 @@ import "../styles/MyOrders.css";
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function MyOrders() {
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -147,7 +147,7 @@ export default function MyOrders() {
   const [lightboxImg, setLightboxImg] = useState(null);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !token) {
       setLoading(false);
       return;
     }
@@ -155,7 +155,7 @@ export default function MyOrders() {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/orders/my`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (Array.isArray(res.data)) setOrders(res.data);
@@ -169,7 +169,7 @@ export default function MyOrders() {
     };
 
     fetchOrders();
-  }, [user]);
+  }, [user, token]);
 
   const openLightbox = (img) => {
     setLightboxImg(img.startsWith("http") ? img : `${API_BASE}${img}`);
