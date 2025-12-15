@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/AccountInfo.css"
+import "../styles/AccountInfo.css";
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
-
 
 export default function AccountInfo({ user, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user.name || "",
     email: user.email || "",
-    phone: user.phone || ""
+    phone: user.phone || "",
   });
   const [loading, setLoading] = useState(false);
-  
+
   const handleChange = (e) => {
-    
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  
+
   const handleSubmit = async (e) => {
     const token = localStorage.getItem("token");
     e.preventDefault();
@@ -25,12 +23,22 @@ export default function AccountInfo({ user, onUpdate }) {
     // const token = localStorage.getItem("token");
     try {
       const res = await axios.put(`${API_BASE}/api/users/me`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        validateStatus: () => true,
       });
-      alert("✅ Дані оновлено!");
-      onUpdate(res.data); // передаємо оновленого користувача наверх
-      setEditing(false);
-      console.log(res.data);
+      if (res.status >= 200 && res.status < 300) {
+        alert("✅ Дані оновлено!");
+
+        onUpdate({
+          ...user,
+          ...formData,
+        });
+        setEditing(false);
+
+        console.log(res.data);
+      } else {
+        throw new Error(res.data.message || "Не вдалося оновити дані");
+      }
     } catch (err) {
       console.error(err);
       alert("❌ Сталася помилка. Спробуйте ще раз.");
@@ -46,10 +54,18 @@ export default function AccountInfo({ user, onUpdate }) {
       <h3>Мої дані</h3>
       {!editing ? (
         <div className="info-view">
-          <p><strong>Ім’я:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email || "—"}</p>
-          <p><strong>Телефон:</strong> {user.phone || "—"}</p>
-          <button className="btn-edit" onClick={() => setEditing(true)}>Редагувати</button>
+          <p>
+            <strong>Ім’я:</strong> {user.name}
+          </p>
+          <p>
+            <strong>Email:</strong> {user.email || "—"}
+          </p>
+          <p>
+            <strong>Телефон:</strong> {user.phone || "—"}
+          </p>
+          <button className="btn-edit" onClick={() => setEditing(true)}>
+            Редагувати
+          </button>
         </div>
       ) : (
         <form className="info-form" onSubmit={handleSubmit}>
@@ -79,7 +95,9 @@ export default function AccountInfo({ user, onUpdate }) {
             <button type="submit" disabled={loading}>
               {loading ? "Збереження..." : "Зберегти"}
             </button>
-            <button type="button" onClick={() => setEditing(false)}>Скасувати</button>
+            <button type="button" onClick={() => setEditing(false)}>
+              Скасувати
+            </button>
           </div>
         </form>
       )}
