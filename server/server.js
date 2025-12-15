@@ -18,7 +18,7 @@ const app = express();
 // ===== MIDDLEWARE =====
 app.use(cors({
   origin: [
-    "https://lavanda-dr.vercel.app",
+    "https://bedlinen-five.vercel.app",
     "http://localhost:5173",
     "http://localhost:3000",
   ],

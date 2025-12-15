@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/AccountInfo.css"
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
-export default function AccountInfo({ user, token, onUpdate }) {
+
+export default function AccountInfo({ user, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user.name || "",
@@ -11,14 +12,17 @@ export default function AccountInfo({ user, token, onUpdate }) {
     phone: user.phone || ""
   });
   const [loading, setLoading] = useState(false);
-
+  
   const handleChange = (e) => {
+    
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
+  
   const handleSubmit = async (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     setLoading(true);
+    // const token = localStorage.getItem("token");
     try {
       const res = await axios.put(`${API_BASE}/api/users/me`, formData, {
         headers: { Authorization: `Bearer ${token}` }
@@ -26,6 +30,7 @@ export default function AccountInfo({ user, token, onUpdate }) {
       alert("✅ Дані оновлено!");
       onUpdate(res.data); // передаємо оновленого користувача наверх
       setEditing(false);
+      console.log(res.data);
     } catch (err) {
       console.error(err);
       alert("❌ Сталася помилка. Спробуйте ще раз.");
