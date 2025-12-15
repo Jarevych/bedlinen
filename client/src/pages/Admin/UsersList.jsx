@@ -3,6 +3,9 @@ import '../styles/UsersList.css'
 import '../styles/admin-table.css'
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+
+
 export default function UsersList() {
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("token");
@@ -13,7 +16,8 @@ export default function UsersList() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users", {
+      const res = await axios
+      .get(`${API_BASE}/api/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
