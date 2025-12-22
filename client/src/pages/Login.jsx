@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 const Login = () => {
@@ -42,6 +42,8 @@ const Login = () => {
           required
         />
         <button type="submit">Увійти</button>
+        <Link to="/forgot-password">Забули пароль?</Link>
+        <Link to="/register">Реєстрація</Link>
       </form>
     </div>
   );

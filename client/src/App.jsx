@@ -13,6 +13,8 @@ import Header from "./components/Header.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 import Footer from "./components/Footer.jsx";
 import EditFabric from "./pages/Admin/EditFabrics.jsx";
+import ForgotPassword from "./pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -28,6 +30,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
 
           {isAdmin && (

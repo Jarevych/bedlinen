@@ -2,9 +2,11 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+// import crypto from "crypto";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+const API_BASE = process.env.API_BASE || "http://localhost:5173";
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -99,5 +101,73 @@ router.get("/me", async (req, res) => {
     res.status(401).json({ message: "Невірний або прострочений токен" });
   }
 });
+
+import crypto from "crypto";
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    // 1️⃣ генеруємо raw token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // 2️⃣ зберігаємо ХЕШ токена
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 хв
+
+    await user.save();
+
+    // 3️⃣ лінк (поки просто console.log)
+    const resetLink = `${API_BASE}/reset-password/${resetToken}`;
+
+    console.log("🔑 RESET LINK:", resetLink);
+
+    res.json({ message: "Посилання для скидання пароля відправлено" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Токен недійсний або прострочений" });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Пароль успішно змінено" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
 
 export default router;

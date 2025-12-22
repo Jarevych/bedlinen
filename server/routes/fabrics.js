@@ -54,6 +54,7 @@ router.put(
     { name: "image", maxCount: 1 },
     { name: "additionalImages", maxCount: 10 }
   ]),
+  
   updateFabric
 );
 

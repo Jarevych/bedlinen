@@ -2,6 +2,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import bcrypt from "bcryptjs";
+// import { use } from "react";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
@@ -140,5 +142,38 @@ router.delete("/:id", authAdmin, async (req, res) => {
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
+
+router.put("/me/password", authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Заповніть всі поля" });
+    }
+
+
+    const user = await User.findById(req.user.id);
+
+
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Старий пароль невірний" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Пароль успішно змінено" });
+  } catch (err) {
+    console.error("❌ Change password error:", err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
 
 export default router;

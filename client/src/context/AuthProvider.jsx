@@ -7,6 +7,10 @@ const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // 👈 додаємо loading
+
+  const updateUser = (updatedUser) => {
+  setUser(updatedUser);
+};
 console.log("AuthContext user:", user); 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,7 +51,17 @@ console.log("AuthContext user:", user);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+  value={{
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    updateUser, // 👈 ДОДАЛИ
+  }}
+>
+
       {children}
     </AuthContext.Provider>
   );
