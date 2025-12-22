@@ -36,3 +36,5 @@ export const login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+export const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+

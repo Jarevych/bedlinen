@@ -2,18 +2,18 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-// import crypto from "crypto";
+import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
+import { resetPasswordEmail } from "../emails/resetPasswordEmail.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 const API_BASE = process.env.API_BASE || "http://localhost:5173";
 
 const generateToken = (user) => {
-  return jwt.sign(
-    { id: user._id, role: user.role },
-    JWT_SECRET,
-    { expiresIn: "7d" }
-  );
+  return jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
+    expiresIn: "7d",
+  });
 };
 
 // 📌 Реєстрація
@@ -22,7 +22,9 @@ router.post("/register", async (req, res) => {
     const { name, email, phone, password } = req.body;
 
     if (!name || !password || (!email && !phone)) {
-      return res.status(400).json({ message: "Будь ласка, заповніть усі поля" });
+      return res
+        .status(400)
+        .json({ message: "Будь ласка, заповніть усі поля" });
     }
 
     const existingUser = await User.findOne({
@@ -30,7 +32,9 @@ router.post("/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Користувач з такими даними вже існує" });
+      return res
+        .status(400)
+        .json({ message: "Користувач з такими даними вже існує" });
     }
 
     const user = new User({ name, email, phone, password });
@@ -102,46 +106,47 @@ router.get("/me", async (req, res) => {
   }
 });
 
-import crypto from "crypto";
-
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
 
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "Користувача не знайдено" });
+      return res.json({ message: "Якщо email існує — лист надіслано" });
     }
 
-    // 1️⃣ генеруємо raw token
     const resetToken = crypto.randomBytes(32).toString("hex");
 
-    // 2️⃣ зберігаємо ХЕШ токена
     user.resetPasswordToken = crypto
       .createHash("sha256")
       .update(resetToken)
       .digest("hex");
 
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 хв
-
     await user.save();
 
-    // 3️⃣ лінк (поки просто console.log)
-    const resetLink = `${API_BASE}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    console.log("🔑 RESET LINK:", resetLink);
+    // const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
-    res.json({ message: "Посилання для скидання пароля відправлено" });
+    await sendEmail({
+      to: user.email,
+      subject: "🔐 Скидання пароля | BedLinen",
+      html: resetPasswordEmail({
+        name: user.name,
+        resetUrl,
+      }),
+    });
+
+    res.json({ message: "Лист для відновлення пароля надіслано" });
   } catch (err) {
-    console.error(err);
+    console.error("Forgot password error:", err);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
 
 router.post("/reset-password/:token", async (req, res) => {
   try {
-    const { password } = req.body;
-
     const hashedToken = crypto
       .createHash("sha256")
       .update(req.params.token)
@@ -153,18 +158,35 @@ router.post("/reset-password/:token", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Токен недійсний або прострочений" });
+      return res
+        .status(400)
+        .json({ message: "Токен недійсний або протермінований" });
     }
 
-    user.password = password;
+    // 🔐 новий пароль
+    user.password = req.body.password;
+
+    // ❌ прибираємо reset-дані
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 
     await user.save();
 
-    res.json({ message: "Пароль успішно змінено" });
+    // 🔑 АВТОЛОГІН
+    const token = generateToken(user);
+
+    res.json({
+      message: "Пароль успішно змінено",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
-    console.error(err);
+    console.error("Reset password error:", err);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });

@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+// import { useContext } from "react";
+// import { AuthContext } from "../context/AuthContext"; // шлях перевір
+
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
-
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+// const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +27,14 @@ export default function ResetPassword() {
     setError("");
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${API_BASE}/api/auth/reset-password/${token}`,
         { password }
       );
-
+        localStorage.setItem("token", res.data.token);
       alert("✅ Пароль змінено. Увійдіть з новим паролем");
-      navigate("/login");
+      // window.location.href = "/profile";
+      navigate("/profile");
     } catch (err) {
       setError(
         err.response?.data?.message || "Помилка при зміні пароля"
